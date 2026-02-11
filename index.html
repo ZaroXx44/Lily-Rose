@@ -26,6 +26,7 @@
             color: #7a0036;
             overflow: hidden;
             -webkit-user-select: none;
+            user-select: none;
         }
 
         .widget-card {
@@ -72,6 +73,7 @@
             font-size: 26px;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
         }
 
         .box p {
@@ -88,6 +90,10 @@
             padding: 10px;
             border-radius: 15px;
             font-size: 11px;
+            min-height: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .event-title {
@@ -117,8 +123,7 @@
         </div>
 
         <div id="event-box" class="next-event">
-            <span class="event-title" id="event-name">Chargement...</span>
-            <span id="event-days">--</span> jours restants
+            <span id="event-content">Calcul en cours...</span>
         </div>
 
         <div class="footer">30 Octobre 2024 • 14:30</div>
@@ -128,35 +133,38 @@
         // DATE DE MISE EN COUPLE
         const start = new Date("2024-10-30T14:30:00").getTime();
         
-        // LISTE DES ÉVÉNEMENTS (Mois - 1)
+        // LISTE DES ÉVÉNEMENTS (Mois : Janvier=0, Mai=4, Juillet=6, Octobre=9)
         const events = [
             { name: "St Valentin 🌹", month: 1, day: 14 },
-            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    // 10 Mai
-            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, // 30 Juillet
-            { name: "Notre Anniversaire ❤️", month: 9, day: 30 } // 30 Octobre
+            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    
+            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, 
+            { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
         ];
 
         function update() {
             const now = new Date();
             const diff = now.getTime() - start;
 
-            // Compteur Principal
+            // 1. Mise à jour du compteur principal
             document.getElementById("days").textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
             document.getElementById("hours").textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
             document.getElementById("mins").textContent = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
             document.getElementById("secs").textContent = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
 
-            // Calcul Prochain Événement
+            // 2. Calcul du prochain événement
             let closestEvent = null;
             let minDays = 366;
 
             events.forEach(event => {
                 let eventDate = new Date(now.getFullYear(), event.month, event.day);
-                // Si la date est déjà passée cette année, on regarde l'année prochaine
-                if (eventDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+                let todayOnly = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                if (eventDate < todayOnly) {
                     eventDate.setFullYear(now.getFullYear() + 1);
                 }
-                const dayDiff = Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24));
+                
+                const timeDiff = eventDate - todayOnly;
+                const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
                 
                 if (dayDiff < minDays) {
                     minDays = dayDiff;
@@ -164,8 +172,14 @@
                 }
             });
 
-            document.getElementById("event-name").textContent = closestEvent.name;
-            document.getElementById("event-days").textContent = minDays;
+            // 3. Affichage personnalisé
+            const eventEl = document.getElementById("event-content");
+            if (minDays === 0) {
+                eventEl.innerHTML = `<span class="event-title">C'est aujourd'hui !</span> ${closestEvent.name}`;
+            } else {
+                const s = minDays > 1 ? 's' : '';
+                eventEl.innerHTML = `<span class="event-title">${closestEvent.name}</span> dans ${minDays} jour${s}`;
+            }
         }
 
         setInterval(update, 1000);
