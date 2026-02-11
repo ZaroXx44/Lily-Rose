@@ -63,7 +63,7 @@
             <div class="box"><span id="secs">00</span><p>Secondes</p></div>
         </div>
         <div id="event-box" class="next-event">
-            <span id="event-content">Synchronisation...</span>
+            <span id="event-content">Chargement...</span>
         </div>
         <div class="footer">Depuis le 30 Octobre 2024 • 14:30</div>
     </div>
@@ -79,21 +79,6 @@
             { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
         ];
 
-        async function syncTime() {
-            try {
-                // Utilisation d'un serveur fiable (WorldTimeAPI)
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 sec max
-                const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', { signal: controller.signal });
-                const data = await response.json();
-                clearTimeout(timeoutId);
-                const serverTime = new Date(data.datetime).getTime();
-                deviceOffset = serverTime - Date.now();
-            } catch (e) {
-                console.log("Synchro impossible, heure locale utilisée.");
-            }
-        }
-
         function createHearts() {
             const container = document.getElementById('hearts-bg');
             for(let i = 0; i < 15; i++) {
@@ -102,9 +87,24 @@
                 heart.innerHTML = '💖';
                 heart.style.left = Math.random() * 100 + 'vw';
                 heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                heart.style.animationDelay = (Math.random() * 10) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
                 heart.style.animationDuration = (Math.random() * 5 + 10) + 's';
                 container.appendChild(heart);
+            }
+        }
+
+        async function syncTime() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                const response = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', { signal: controller.signal });
+                const data = await response.json();
+                clearTimeout(timeoutId);
+                const serverTime = new Date(data.datetime).getTime();
+                deviceOffset = serverTime - Date.now();
+                console.log("Synchro ok");
+            } catch (e) {
+                console.log("Mode local");
             }
         }
 
@@ -137,11 +137,13 @@
             }
         }
 
+        // LANCEMENT PRIORITAIRE
         createHearts();
-        syncTime().finally(() => {
-            setInterval(update, 100);
-            update();
-        });
+        setInterval(update, 100);
+        update();
+
+        // SYNCHRO DISCRÈTE EN FOND
+        syncTime();
     </script>
 </body>
 </html>
