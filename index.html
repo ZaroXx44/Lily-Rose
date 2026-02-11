@@ -22,81 +22,83 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             color: #7a0036;
             overflow: hidden;
             -webkit-user-select: none;
-            user-select: none;
         }
 
         .widget-card {
             background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 30px 20px;
+            padding: 25px 20px;
             border-radius: 35px;
             border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             width: 85%;
             max-width: 320px;
             text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 38px;
+            font-size: 32px;
             margin: 0 0 5px 0;
-            /* Petite animation battement de coeur */
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
 
         .tagline {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             opacity: 0.7;
         }
 
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .box {
             background: rgba(255, 255, 255, 0.3);
-            padding: 15px 5px;
+            padding: 12px 5px;
             border-radius: 20px;
-            min-width: 80px;
         }
 
         .box span {
             display: block;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
-            /* FIX: Empêche le saut de seconde visuel */
             font-variant-numeric: tabular-nums;
-            letter-spacing: -1px;
         }
 
         .box p {
             margin: 0;
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
             font-weight: 600;
             opacity: 0.6;
         }
 
-        .footer {
-            margin-top: 25px;
+        .next-event {
+            margin-top: 20px;
+            background: rgba(122, 0, 54, 0.1);
+            padding: 10px;
+            border-radius: 15px;
             font-size: 11px;
+        }
+
+        .event-title {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .footer {
+            margin-top: 15px;
+            font-size: 10px;
             opacity: 0.5;
         }
     </style>
@@ -114,36 +116,59 @@
             <div class="box"><span id="secs">00</span><p>Secondes</p></div>
         </div>
 
+        <div id="event-box" class="next-event">
+            <span class="event-title" id="event-name">Chargement...</span>
+            <span id="event-days">--</span> jours restants
+        </div>
+
         <div class="footer">30 Octobre 2024 • 14:30</div>
     </div>
 
     <script>
-        // Date précise du début
+        // DATE DE MISE EN COUPLE
         const start = new Date("2024-10-30T14:30:00").getTime();
+        
+        // LISTE DES ÉVÉNEMENTS (Mois - 1)
+        const events = [
+            { name: "St Valentin 🌹", month: 1, day: 14 },
+            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    // 10 Mai
+            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, // 30 Juillet
+            { name: "Notre Anniversaire ❤️", month: 9, day: 30 } // 30 Octobre
+        ];
 
         function update() {
-            const now = new Date().getTime();
-            const d = now - start;
+            const now = new Date();
+            const diff = now.getTime() - start;
 
-            if (d < 0) return;
+            // Compteur Principal
+            document.getElementById("days").textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").textContent = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById("mins").textContent = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById("secs").textContent = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
 
-            // Calculs
-            const days = Math.floor(d / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const mins = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
-            const secs = Math.floor((d % (1000 * 60)) / 1000);
+            // Calcul Prochain Événement
+            let closestEvent = null;
+            let minDays = 366;
 
-            // Mise à jour du texte avec sécurité anti-saut (09, 08...)
-            document.getElementById("days").textContent = days;
-            document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
-            document.getElementById("mins").textContent = mins.toString().padStart(2, '0');
-            document.getElementById("secs").textContent = secs.toString().padStart(2, '0');
+            events.forEach(event => {
+                let eventDate = new Date(now.getFullYear(), event.month, event.day);
+                // Si la date est déjà passée cette année, on regarde l'année prochaine
+                if (eventDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+                    eventDate.setFullYear(now.getFullYear() + 1);
+                }
+                const dayDiff = Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24));
+                
+                if (dayDiff < minDays) {
+                    minDays = dayDiff;
+                    closestEvent = event;
+                }
+            });
+
+            document.getElementById("event-name").textContent = closestEvent.name;
+            document.getElementById("event-days").textContent = minDays;
         }
 
-        // Rafraîchissement chaque seconde
         setInterval(update, 1000);
-        
-        // Lancement immédiat
         update();
     </script>
 </body>
