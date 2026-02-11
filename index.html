@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lily & Keryan</title>
+    <title>Lily-Rose & Keryan</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -25,6 +25,8 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #7a0036;
             overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .widget-card {
@@ -44,6 +46,14 @@
             font-family: 'Dancing Script', cursive;
             font-size: 38px;
             margin: 0 0 5px 0;
+            /* Petite animation battement de coeur */
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .tagline {
@@ -64,12 +74,16 @@
             background: rgba(255, 255, 255, 0.3);
             padding: 15px 5px;
             border-radius: 20px;
+            min-width: 80px;
         }
 
         .box span {
             display: block;
             font-size: 28px;
             font-weight: 700;
+            /* FIX: Empêche le saut de seconde visuel */
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
         }
 
         .box p {
@@ -95,28 +109,41 @@
 
         <div class="grid">
             <div class="box"><span id="days">0</span><p>Jours</p></div>
-            <div class="box"><span id="hours">0</span><p>Heures</p></div>
-            <div class="box"><span id="mins">0</span><p>Minutes</p></div>
-            <div class="box"><span id="secs">0</span><p>Secondes</p></div>
+            <div class="box"><span id="hours">00</span><p>Heures</p></div>
+            <div class="box"><span id="mins">00</span><p>Minutes</p></div>
+            <div class="box"><span id="secs">00</span><p>Secondes</p></div>
         </div>
 
         <div class="footer">30 Octobre 2024 • 14:30</div>
     </div>
 
     <script>
+        // Date précise du début
         const start = new Date("2024-10-30T14:30:00").getTime();
 
         function update() {
             const now = new Date().getTime();
             const d = now - start;
 
-            document.getElementById("days").innerText = Math.floor(d / (1000 * 60 * 60 * 24));
-            document.getElementById("hours").innerText = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById("mins").innerText = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
-            document.getElementById("secs").innerText = Math.floor((d % (1000 * 60)) / 1000);
+            if (d < 0) return;
+
+            // Calculs
+            const days = Math.floor(d / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const mins = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
+            const secs = Math.floor((d % (1000 * 60)) / 1000);
+
+            // Mise à jour du texte avec sécurité anti-saut (09, 08...)
+            document.getElementById("days").textContent = days;
+            document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+            document.getElementById("mins").textContent = mins.toString().padStart(2, '0');
+            document.getElementById("secs").textContent = secs.toString().padStart(2, '0');
         }
 
+        // Rafraîchissement chaque seconde
         setInterval(update, 1000);
+        
+        // Lancement immédiat
         update();
     </script>
 </body>
