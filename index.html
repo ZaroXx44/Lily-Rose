@@ -18,10 +18,10 @@
         
         body {
             margin: 0; height: 100vh; width: 100vw;
-            /* Dégradé mis à jour avec des touches de violet */
-            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #cfbcff, #e2d1ff, #feb47b);
+            /* Dégradé adouci : tons pastels, lavande légère et rose poudré */
+            background: linear-gradient(-45deg, #ffc3c5, #fce2e1, #e6d8ff, #f0e6ff, #ffe4d1);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientBG 20s ease infinite; /* Animation plus lente */
             display: flex; justify-content: center; align-items: center;
             font-family: 'Poppins', sans-serif; color: var(--primary);
             overflow: hidden; -webkit-user-select: none;
@@ -40,15 +40,15 @@
         
         .floating-heart { 
             position: absolute; 
-            bottom: -10vh; /* Départ sous l'écran */
+            bottom: -10vh;
             opacity: 0; 
-            animation: floatUp 10s linear infinite; 
+            animation: floatUp 12s linear infinite; 
         }
 
         @keyframes floatUp { 
             0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
-            10% { opacity: 0.4; }
-            90% { opacity: 0.4; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
             100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; } 
         }
 
@@ -129,12 +129,11 @@
             for(let i = 0; i < 15; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'floating-heart';
-                // Alterne entre cœurs roses et violets
-                heart.innerHTML = Math.random() > 0.5 ? '💖' : '💜';
+                heart.innerHTML = Math.random() > 0.5 ? '💖' : '🤍'; // Coeurs roses et blancs pour la douceur
                 heart.style.left = Math.random() * 100 + 'vw';
                 heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                heart.style.animationDuration = (Math.random() * 5 + 7) + 's';
-                heart.style.animationDelay = (Math.random() * 10) + 's'; 
+                heart.style.animationDuration = (Math.random() * 5 + 10) + 's';
+                heart.style.animationDelay = (Math.random() * 12) + 's'; 
                 container.appendChild(heart);
             }
         }
