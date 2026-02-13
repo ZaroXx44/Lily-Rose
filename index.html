@@ -26,22 +26,28 @@
         }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+        /* Conteneur des coeurs */
+        .bg-hearts { 
+            position: absolute; 
+            top: 0; left: 0;
+            width: 100%; height: 100%; 
+            z-index: 0; 
+            overflow: hidden; 
+            pointer-events: none; /* Pour ne pas gêner le clic sur la carte */
+        }
         
         .floating-heart { 
             position: absolute; 
+            bottom: -10vh; /* Départ sous l'écran */
             opacity: 0; 
-            animation: float 12s linear infinite, fadeIn 2s ease-in forwards; 
+            animation: floatUp 10s linear infinite; 
         }
 
-        @keyframes float { 
-            0% { transform: translateY(110vh) rotate(0deg); } 
-            100% { transform: translateY(-20vh) rotate(360deg); } 
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.2; }
+        @keyframes floatUp { 
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; } 
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; } 
         }
 
         .widget-card {
@@ -88,8 +94,8 @@
 
         const events = [
             { name: "St Valentin 🌹", month: 1, day: 14 },
-            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    
-            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, 
+            { name: "Anniv Keryan 🎂", month: 3, day: 10 },    
+            { name: "Anniv Lily-Rose 🎂", month: 5, day: 30 }, 
             { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
         ];
 
@@ -100,10 +106,11 @@
                 heart.className = 'floating-heart';
                 heart.innerHTML = '💖';
                 heart.style.left = Math.random() * 100 + 'vw';
-                // ASTUCE : Position de départ aléatoire en hauteur pour éviter l'effet "tas"
-                heart.style.top = Math.random() * 100 + 'vh';
                 heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                heart.style.animationDelay = (Math.random() * -10) + 's'; // Delay négatif pour qu'ils soient déjà en mouvement
+                // Durée de vol un peu différente pour chacun
+                heart.style.animationDuration = (Math.random() * 5 + 7) + 's';
+                // Délai aléatoire pour qu'ils ne partent pas tous en même temps
+                heart.style.animationDelay = (Math.random() * 10) + 's'; 
                 container.appendChild(heart);
             }
         }
