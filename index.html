@@ -58,10 +58,10 @@
 
         async function syncTime() {
             try {
-                const sF = Date.now();
+                const sF = performance.now();
                 const response = await fetch(window.location.href, { method: 'HEAD', cache: 'no-cache' });
                 const serverDateStr = response.headers.get('Date');
-                const latency = (Date.now() - sF) / 2;
+                const latency = (performance.now() - sF) / 2;
                 if (serverDateStr) {
                     const serverTime = new Date(serverDateStr).getTime() + latency;
                     offset = serverTime - Date.now();
@@ -69,33 +69,40 @@
             } catch (e) {}
         }
 
-        const up = () => {
+        // Utilisation de requestAnimationFrame pour une fluidité parfaite
+        function render() {
             const now = Date.now() + offset; 
             const diff = now - start;
             
+            // On calcule l'angle du dégradé
             const angle = (now / 50) % 360; 
             const posX = 50 + Math.sin(now / 5000) * 30;
             const posY = 50 + Math.cos(now / 5000) * 30;
             document.body.style.setProperty('--angle', `${angle}deg`);
             document.body.style.backgroundPosition = `${posX}% ${posY}%`;
 
-            if (diff < 0) return;
-            document.getElementById("d").innerText = Math.floor(diff/864e5);
-            document.getElementById("hr").innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
-            document.getElementById("m").innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
-            document.getElementById("s").innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
-            
-            let best = null, min = 366;
-            const nD = new Date(now);
-            const t = new Date(nD.getFullYear(), nD.getMonth(), nD.getDate());
-            evs.forEach(e => {
-                let d = new Date(nD.getFullYear(), e.m, e.d);
-                if (d < t) d.setFullYear(d.getFullYear() + 1);
-                let dD = Math.ceil((d - t) / 864e5);
-                if (dD < min) { min = dD; best = e; }
-            });
-            if(best) document.getElementById("ec").innerHTML = min === 0 ? `<b>C'est aujourd'hui !</b><br>${best.n}` : `<b>${best.n}</b> dans ${min} jour${min>1?'s':''}`;
-        };
+            if (diff >= 0) {
+                document.getElementById("d").innerText = Math.floor(diff/864e5);
+                document.getElementById("hr").innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
+                document.getElementById("m").innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
+                document.getElementById("s").innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
+                
+                // On ne calcule les événements qu'une fois par seconde pour économiser la batterie
+                if (Math.floor(now/1000) % 1 === 0) {
+                    let best = null, min = 366;
+                    const nD = new Date(now);
+                    const t = new Date(nD.getFullYear(), nD.getMonth(), nD.getDate());
+                    evs.forEach(e => {
+                        let d = new Date(nD.getFullYear(), e.m, e.d);
+                        if (d < t) d.setFullYear(d.getFullYear() + 1);
+                        let dD = Math.ceil((d - t) / 864e5);
+                        if (dD < min) { min = dD; best = e; }
+                    });
+                    if(best) document.getElementById("ec").innerHTML = min === 0 ? `<b>C'est aujourd'hui !</b><br>${best.n}` : `<b>${best.n}</b> dans ${min} jour${min>1?'s':''}`;
+                }
+            }
+            requestAnimationFrame(render);
+        }
 
         const heartEmojis = ['💖', '🤍', '🌸', '✨'];
         for(let i=0; i<15; i++) {
@@ -108,7 +115,6 @@
 
         syncTime();
         setInterval(syncTime, 30000); 
-        setInterval(up, 50); 
-        up();
+        requestAnimationFrame(render);
     </script>
 </body></html>
