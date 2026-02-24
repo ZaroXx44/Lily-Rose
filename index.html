@@ -3,123 +3,123 @@
 <title>Lily-Rose & Keryan</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/160/heart-suit.png">
 <style>
-    :root { --p: #4a001e; --g: rgba(255, 255, 255, 0.4); }
-    body { 
-        margin: 0; height: 100vh; 
-        background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
-        background-size: 400% 400%;
-        display: flex; justify-content: center; align-items: center; 
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-        color: var(--p); overflow: hidden; -webkit-user-select: none; 
-    }
-    .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
-    .floating-heart { position: absolute; opacity: 0; animation: float 15s linear infinite, fadeIn 3s ease-in forwards; font-size: 22px; }
-    @keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
-    @keyframes fadeIn { to { opacity: 0.25; } }
-    
-    .card { 
-        position: relative; z-index: 10; background: var(--g); 
-        backdrop-filter: blur(25px) saturate(160%); -webkit-backdrop-filter: blur(25px) saturate(160%);
-        padding: 24px; border-radius: 38px; border: 0.5px solid rgba(255,255,255,0.7); 
-        width: 82%; max-width: 300px; text-align: center; box-shadow: 0 10px 30px rgba(122, 0, 54, 0.1); 
-    }
-    h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
-    .tag { font-size: 11px; font-weight: 600; margin-bottom: 22px; opacity: 0.5; text-transform: uppercase; letter-spacing: 1.5px; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .box { background: rgba(255, 255, 255, 0.25); padding: 14px 0; border-radius: 18px; box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.3); }
-    .box span { display: block; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
-    .box p { margin: 0; font-size: 10px; font-weight: 600; opacity: 0.6; }
-    
-    .ev { margin-top: 20px; background: rgba(122, 0, 54, 0.06); padding: 12px; border-radius: 16px; font-size: 12px; color: #7a0036; line-height: 1.4; }
-    .ev b { color: #d63384; font-weight: 700; }
-    
-    .footer { margin-top: 18px; font-size: 10px; opacity: 0.4; font-weight: 500; }
+    :root { --p: #4a001e; --g: rgba(255, 255, 255, 0.4); }
+    body { 
+        margin: 0; height: 100vh; 
+        background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
+        background-size: 400% 400%;
+        display: flex; justify-content: center; align-items: center; 
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        color: var(--p); overflow: hidden; -webkit-user-select: none; 
+    }
+    .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
+    .floating-heart { position: absolute; opacity: 0; animation: float 15s linear infinite, fadeIn 3s ease-in forwards; font-size: 22px; }
+    @keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
+    @keyframes fadeIn { to { opacity: 0.25; } }
+    
+    .card { 
+        position: relative; z-index: 10; background: var(--g); 
+        backdrop-filter: blur(25px) saturate(160%); -webkit-backdrop-filter: blur(25px) saturate(160%);
+        padding: 24px; border-radius: 38px; border: 0.5px solid rgba(255,255,255,0.7); 
+        width: 82%; max-width: 300px; text-align: center; box-shadow: 0 10px 30px rgba(122, 0, 54, 0.1); 
+    }
+    h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+    .tag { font-size: 11px; font-weight: 600; margin-bottom: 22px; opacity: 0.5; text-transform: uppercase; letter-spacing: 1.5px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .box { background: rgba(255, 255, 255, 0.25); padding: 14px 0; border-radius: 18px; box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.3); }
+    .box span { display: block; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+    .box p { margin: 0; font-size: 10px; font-weight: 600; opacity: 0.6; }
+    
+    .ev { margin-top: 20px; background: rgba(122, 0, 54, 0.06); padding: 12px; border-radius: 16px; font-size: 12px; color: #7a0036; line-height: 1.4; }
+    .ev b { color: #d63384; font-weight: 700; }
+    
+    .footer { margin-top: 18px; font-size: 10px; opacity: 0.4; font-weight: 500; }
 </style></head>
 <body>
-    <div class="bg-hearts" id="h"></div>
-    <div class="card">
-        <h1>Lily-Rose & Keryan</h1><div class="tag">Pour Toujours</div>
-        <div class="grid">
-            <div class="box"><span id="d">0</span><p>jours</p></div>
-            <div class="box"><span id="hr">00</span><p>heures</p></div>
-            <div class="box"><span id="m">00</span><p>minutes</p></div>
-            <div class="box"><span id="s">00</span><p>secondes</p></div>
-        </div>
-        <div id="ec" class="ev">Synchronisation...</div>
-        <div class="footer">Depuis le 30 octobre 2024</div>
-    </div>
+    <div class="bg-hearts" id="h"></div>
+    <div class="card">
+        <h1>Lily-Rose & Keryan</h1><div class="tag">Pour Toujours</div>
+        <div class="grid">
+            <div class="box"><span id="d">0</span><p>jours</p></div>
+            <div class="box"><span id="hr">00</span><p>heures</p></div>
+            <div class="box"><span id="m">00</span><p>minutes</p></div>
+            <div class="box"><span id="s">00</span><p>secondes</p></div>
+        </div>
+        <div id="ec" class="ev">Synchronisation...</div>
+        <div class="footer">Depuis le 30 octobre 2024</div>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCKOyjFQB-Q1CJTN2sOBP37NiSpnDNllO0",
-            authDomain: "compteur-a91b1.firebaseapp.com",
-            databaseURL: "https://compteur-a91b1-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "compteur-a91b1",
-            storageBucket: "compteur-a91b1.firebasestorage.app",
-            messagingSenderId: "970871414423",
-            appId: "1:970871414423:web:87d07f6ed151c164e513d2"
-        };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCKOyjFQB-Q1CJTN2sOBP37NiSpnDNllO0",
+            authDomain: "compteur-a91b1.firebaseapp.com",
+            databaseURL: "https://compteur-a91b1-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "compteur-a91b1",
+            storageBucket: "compteur-a91b1.firebasestorage.app",
+            messagingSenderId: "970871414423",
+            appId: "1:970871414423:web:87d07f6ed151c164e513d2"
+        };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        
-        // --- SYNCHRO ATOMIQUE VIA FIREBASE ---
-        let serverOffset = 0;
-        const offsetRef = ref(db, ".info/serverTimeOffset");
-        onValue(offsetRef, (snap) => {
-            serverOffset = snap.val() || 0;
-        });
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        // --- SYNCHRO ATOMIQUE VIA FIREBASE ---
+        let serverOffset = 0;
+        const offsetRef = ref(db, ".info/serverTimeOffset");
+        onValue(offsetRef, (snap) => {
+            serverOffset = snap.val() || 0;
+        });
 
-        const start = new Date("2024-10-30T14:30:00").getTime();
-        const evs = [
-            { n: "St Valentin 🌹", m: 1, d: 14 },
-            { n: "Anniv Keryan 🎂", m: 4, d: 10 },
-            { n: "Anniv Lily-Rose 🎂", m: 6, d: 30 },
-            { n: "Notre Anniversaire ❤️", m: 9, d: 30 }
-        ];
+        const start = new Date("2024-10-30T14:30:00").getTime();
+        const evs = [
+            { n: "St Valentin 🌹", m: 1, d: 14 },
+            { n: "Anniv Keryan 🎂", m: 4, d: 10 },
+            { n: "Anniv Lily-Rose 🎂", m: 6, d: 30 },
+            { n: "Notre Anniversaire ❤️", m: 9, d: 30 }
+        ];
 
-        function render() {
-            // "now" est maintenant corrigé par le serveur Firebase en temps réel
-            const now = Date.now() + serverOffset;
-            const diff = now - start;
+        function render() {
+            // "now" est maintenant corrigé par le serveur Firebase en temps réel
+            const now = Date.now() + serverOffset;
+            const diff = now - start;
 
-            // Dégradé synchronisé au millième de seconde
-            const angle = (now / 50) % 360;
-            document.body.style.setProperty('--angle', angle + 'deg');
-            document.body.style.backgroundPosition = `${50 + Math.sin(now/5000)*20}% ${50 + Math.cos(now/5000)*20}%`;
+            // Dégradé synchronisé au millième de seconde
+            const angle = (now / 50) % 360;
+            document.body.style.setProperty('--angle', angle + 'deg');
+            document.body.style.backgroundPosition = `${50 + Math.sin(now/5000)*20}% ${50 + Math.cos(now/5000)*20}%`;
 
-            if (diff >= 0) {
-                document.getElementById('d').innerText = Math.floor(diff/864e5);
-                document.getElementById('hr').innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
-                document.getElementById('m').innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
-                document.getElementById('s').innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
-                
-                const nD = new Date(now);
-                const t = new Date(nD.getFullYear(), nD.getMonth(), nD.getDate());
-                let best = null, min = 366;
-                evs.forEach(e => {
-                    let d = new Date(nD.getFullYear(), e.m, e.d);
-                    if (d < t) d.setFullYear(d.getFullYear() + 1);
-                    let dD = Math.ceil((d - t) / 864e5);
-                    if (dD < min) { min = dD; best = e; }
-                });
-                if(best) document.getElementById("ec").innerHTML = min === 0 ? `<b>C'est aujourd'hui !</b><br>${best.n}` : `<b>${best.n}</b> dans ${min} jour${min>1?'s':''}`;
-            }
-            requestAnimationFrame(render);
-        }
+            if (diff >= 0) {
+                document.getElementById('d').innerText = Math.floor(diff/864e5);
+                document.getElementById('hr').innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
+                document.getElementById('m').innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
+                document.getElementById('s').innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
+                
+                const nD = new Date(now);
+                const t = new Date(nD.getFullYear(), nD.getMonth(), nD.getDate());
+                let best = null, min = 366;
+                evs.forEach(e => {
+                    let d = new Date(nD.getFullYear(), e.m, e.d);
+                    if (d < t) d.setFullYear(d.getFullYear() + 1);
+                    let dD = Math.ceil((d - t) / 864e5);
+                    if (dD < min) { min = dD; best = e; }
+                });
+                if(best) document.getElementById("ec").innerHTML = min === 0 ? `<b>C'est aujourd'hui !</b><br>${best.n}` : `<b>${best.n}</b> dans ${min} jour${min>1?'s':''}`;
+            }
+            requestAnimationFrame(render);
+        }
 
-        // Cœurs flottants
-        for(let i=0; i<12; i++) {
-            let heart = document.createElement('div'); heart.className='floating-heart';
-            heart.innerText = ['💖', '🤍', '🌸', '✨'][Math.floor(Math.random()*4)];
-            heart.style.left = Math.random()*100+'vw';
-            heart.style.animationDelay = (Math.random() * -15) + 's';
-            document.getElementById('h').appendChild(heart);
-        }
+        // Cœurs flottants
+        for(let i=0; i<12; i++) {
+            let heart = document.createElement('div'); heart.className='floating-heart';
+            heart.innerText = ['💖', '🤍', '🌸', '✨'][Math.floor(Math.random()*4)];
+            heart.style.left = Math.random()*100+'vw';
+            heart.style.animationDelay = (Math.random() * -15) + 's';
+            document.getElementById('h').appendChild(heart);
+        }
 
-        requestAnimationFrame(render);
-    </script>
-</body></html> mon code ressemble a ca 
+        requestAnimationFrame(render);
+    </script>
+</body></html>
