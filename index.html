@@ -2,74 +2,113 @@
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Lily-Rose & Keryan</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/160/heart-suit.png">
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-    :root { --p: #7a0036; --g: rgba(255,255,255,0.4); }
-    body { margin: 0; height: 100vh; background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffd1ff, #feb47b); background-size: 400% 400%; animation: bg 15s ease infinite; display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; color: var(--p); overflow: hidden; -webkit-user-select: none; }
-    @keyframes bg { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-    .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
-    .floating-heart { position: absolute; opacity: 0; animation: float 12s linear infinite, fadeIn 2s ease-in forwards; }
-    @keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
-    @keyframes fadeIn { to { opacity: 0.2; } }
-    .card { position: relative; z-index: 10; background: var(--g); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 30px 20px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.6); width: 85%; max-width: 320px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-    h1 { font-family: 'Dancing Script'; font-size: 34px; margin: 0; }
-    .tag { font-size: 10px; letter-spacing: 3px; margin-bottom: 20px; opacity: 0.7; text-transform: uppercase; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .box { background: rgba(255,255,255,0.2); padding: 15px 5px; border-radius: 25px; display: flex; flex-direction: column; align-items: center; }
-    /* Fixe la largeur pour que rien ne bouge */
-    .box span { 
-        display: block; 
-        font-size: 28px; 
-        font-weight: 700; 
-        font-variant-numeric: tabular-nums; 
-        min-width: 80px; /* Assure que la zone du chiffre ne bouge pas */
-        text-align: center;
+    :root { --p: #1d1d1f; --g: rgba(255, 255, 255, 0.55); }
+    body { 
+        margin: 0; height: 100vh; 
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: radial-gradient(circle at top right, #ffcfdf, #bbe1fa, #ffffff);
+        display: flex; justify-content: center; align-items: center; 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+        color: var(--p); overflow: hidden; -webkit-user-select: none; 
     }
-    .box p { margin: 0; font-size: 9px; opacity: 0.6; text-transform: uppercase; font-weight: 600; }
-    .ev { margin-top: 25px; background: rgba(122,0,54,0.08); padding: 12px; border-radius: 20px; font-size: 11px; border: 1px dashed rgba(122,0,54,0.2); min-height: 40px; display: flex; flex-direction: column; justify-content: center; }
-    .footer { margin-top: 20px; font-size: 10px; opacity: 0.5; }
+    
+    .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; filter: blur(2px); }
+    .floating-heart { position: absolute; opacity: 0; animation: float 15s linear infinite, fadeIn 3s ease-in forwards; font-size: 20px; }
+    @keyframes float { 0% { transform: translateY(110vh) scale(0.8); } 100% { transform: translateY(-20vh) scale(1.2); } }
+    @keyframes fadeIn { to { opacity: 0.15; } }
+
+    .card { 
+        position: relative; z-index: 10; 
+        background: var(--g); 
+        backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%);
+        padding: 24px; border-radius: 38px; 
+        border: 0.5px solid rgba(255,255,255,0.7); 
+        width: 82%; max-width: 300px; text-align: center; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    }
+
+    h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+    .tag { font-size: 11px; font-weight: 500; margin-bottom: 22px; opacity: 0.4; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    
+    .box { 
+        background: rgba(255, 255, 255, 0.3); 
+        padding: 14px 0; border-radius: 18px; 
+        box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.3);
+    }
+    
+    .box span { 
+        display: block; font-size: 26px; font-weight: 600; 
+        font-variant-numeric: tabular-nums; letter-spacing: -1px;
+    }
+    
+    .box p { margin: 0; font-size: 10px; font-weight: 500; opacity: 0.5; }
+
+    .ev { 
+        margin-top: 20px; background: rgba(0, 0, 0, 0.03); 
+        padding: 12px; border-radius: 16px; font-size: 12px;
+        color: #1d1d1f; line-height: 1.4;
+    }
+    
+    .ev b { color: #007aff; font-weight: 600; } /* Couleur bleue Apple */
+
+    .footer { margin-top: 18px; font-size: 10px; opacity: 0.3; font-weight: 500; }
 </style></head>
 <body>
     <div class="bg-hearts" id="h"></div>
     <div class="card">
-        <h1>Lily-Rose & Keryan</h1><div class="tag">Pour toujours</div>
+        <h1>Lily-Rose & Keryan</h1><div class="tag">Compteur</div>
         <div class="grid">
-            <div class="box"><span id="d">0</span><p>Jours</p></div>
-            <div class="box"><span id="hr">00</span><p>Heures</p></div>
-            <div class="box"><span id="m">00</span><p>Minutes</p></div>
-            <div class="box"><span id="s">00</span><p>Secondes</p></div>
+            <div class="box"><span id="d">0</span><p>jours</p></div>
+            <div class="box"><span id="hr">00</span><p>heures</p></div>
+            <div class="box"><span id="m">00</span><p>minutes</p></div>
+            <div class="box"><span id="s">00</span><p>secondes</p></div>
         </div>
-        <div class="ev" id="ec">Sync...</div>
-        <div class="footer">Depuis le 30 Octobre 2024 • 14:30</div>
+        <div class="ev" id="ec">Synchronisation...</div>
+        <div class="footer">Depuis le 30 octobre 2024</div>
     </div>
     <script>
         const start = new Date("2024-10-30T14:30:00").getTime();
-        let off = 0, evs = [{n:"St Valentin 🌹",m:1,d:14},{n:"Anniv Keryan 🎂",m:4,d:10},{n:"Anniv Lily-Rose 🎂",m:6,d:30},{n:"Notre Anniversaire ❤️",m:9,d:30}];
+        let off = 0;
+        const evs = [
+            { n: "St Valentin 🌹", m: 1, d: 14 },
+            { n: "Anniv Keryan 🎂", m: 4, d: 10 },
+            { n: "Anniv Lily-Rose 🎂", m: 6, d: 30 },
+            { n: "Notre Anniversaire ❤️", m: 9, d: 30 }
+        ];
 
         const up = () => {
-            const now = new Date(Date.now() + off), diff = now - start;
+            const now = new Date(Date.now() + off);
+            const diff = now.getTime() - start;
             if (diff < 0) return;
+
             document.getElementById("d").innerText = Math.floor(diff/864e5);
             document.getElementById("hr").innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
             document.getElementById("m").innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
             document.getElementById("s").innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
             
             let best = null, min = 366;
+            const t = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
             evs.forEach(e => {
                 let d = new Date(now.getFullYear(), e.m, e.d);
-                let t = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                if (d < t) d.setFullYear(d.getFullYear()+1);
-                let diffD = Math.ceil((d - t)/864e5);
+                if (d < t) d.setFullYear(d.getFullYear() + 1);
+                let diffD = Math.ceil((d - t) / 864e5);
                 if (diffD < min) { min = diffD; best = e; }
             });
-            document.getElementById("ec").innerHTML = min === 0 ? `<b>C'est aujourd'hui !</b><br>${best.n}` : `<b>${best.n}</b><br>dans ${min} jour${min>1?'s':''}`;
+
+            if(best) {
+                document.getElementById("ec").innerHTML = min === 0 ? `<b>C'est aujourd'hui !</b><br>${best.n}` : `<b>${best.n}</b> dans ${min} jour${min>1?'s':''}`;
+            }
         };
 
-        for(let i=0; i<15; i++) {
-            let h = document.createElement('div'); h.className='floating-heart'; h.innerText='💖';
-            h.style.left=Math.random()*100+'vw'; h.style.top=Math.random()*100+'vh';
-            h.style.fontSize=Math.random()*20+10+'px'; h.style.animationDelay=Math.random()*-10+'s';
-            document.getElementById('h').appendChild(h);
+        for(let i=0; i<12; i++) {
+            let heart = document.createElement('div'); heart.className='floating-heart'; heart.innerText='🤍';
+            heart.style.left=Math.random()*100+'vw'; heart.style.top=Math.random()*100+'vh';
+            heart.style.animationDelay=Math.random()*-15+'s';
+            document.getElementById('h').appendChild(heart);
         }
 
         setInterval(up, 100); up();
