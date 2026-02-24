@@ -1,137 +1,59 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lily-Rose & Keryan</title>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Lily-Rose & Keryan</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="https://img.icons8.com/emoji/160/heart-suit.png">
+<style>
+    :root { --p: #4a001e; --g: rgba(255, 255, 255, 0.4); }
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/160/heart-suit.png">
+    /* BLOQUAGE DU SCROLL */
+    html, body { 
+        margin: 0; height: 100dvh; width: 100vw; 
+        overflow: hidden; position: fixed; touch-action: none; 
+    }
 
-    <style>
-        :root { 
-            --p: #4a001e; 
-            --g: rgba(255, 255, 255, 0.35); 
-        }
-        
-        /* BLOCAGE TOTAL DU SCROLL ET DU REBOND */
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            height: 100dvh; 
-            width: 100vw;
-            overflow: hidden; 
-            position: fixed; 
-            touch-action: none; 
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: none;
-        }
-
-        body { 
-            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
-            background-size: 400% 400%;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            color: var(--p); 
-            -webkit-user-select: none; 
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .bg-hearts { 
-            position: absolute; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 0; 
-            pointer-events: none; 
-        }
-
-        .floating-heart { 
-            position: absolute; 
-            opacity: 0; 
-            animation: float 15s linear infinite, fadeIn 3s ease-in forwards; 
-            font-size: 22px; 
-        }
-
-        @keyframes float { 
-            0% { transform: translateY(110vh) rotate(0deg); } 
-            100% { transform: translateY(-20vh) rotate(360deg); } 
-        }
-
-        @keyframes fadeIn { to { opacity: 0.25; } }
-        
-        .card { 
-            position: relative; 
-            z-index: 10; 
-            background: var(--g); 
-            backdrop-filter: blur(30px) saturate(180%); 
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            padding: 28px; 
-            border-radius: 42px; 
-            border: 1px solid rgba(255, 255, 255, 0.5); 
-            width: 80%; 
-            max-width: 320px; 
-            text-align: center; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-            transform: rotate(0deg) !important; /* Force l'assiette droite */
-        }
-
-        h1 { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.8px; }
-        .tag { font-size: 11px; font-weight: 700; margin-bottom: 24px; opacity: 0.5; text-transform: uppercase; letter-spacing: 2px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .box { 
-            background: rgba(255, 255, 255, 0.2); 
-            padding: 16px 0; 
-            border-radius: 22px; 
-            border: 0.5px solid rgba(255, 255, 255, 0.3);
-        }
-        .box span { display: block; font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
-        .box p { margin: 0; font-size: 10px; font-weight: 700; opacity: 0.6; text-transform: uppercase; }
-        
-        .ev { 
-            margin-top: 24px; 
-            background: rgba(255, 255, 255, 0.25); 
-            padding: 14px; 
-            border-radius: 20px; 
-            font-size: 13px; 
-            color: var(--p); 
-            line-height: 1.4; 
-            border: 0.5px solid rgba(255, 255, 255, 0.2);
-        }
-        .ev b { color: #d63384; font-weight: 800; }
-        
-        .footer { margin-top: 22px; font-size: 11px; opacity: 0.5; font-weight: 600; }
-    </style>
-</head>
+    body { 
+        background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
+        background-size: 400% 400%;
+        display: flex; justify-content: center; align-items: center; 
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+        color: var(--p); -webkit-user-select: none; user-select: none;
+    }
+    .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
+    .floating-heart { position: absolute; opacity: 0; animation: float 15s linear infinite, fadeIn 3s ease-in forwards; font-size: 22px; }
+    @keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
+    @keyframes fadeIn { to { opacity: 0.25; } }
+    .card { 
+        position: relative; z-index: 10; background: var(--g); 
+        backdrop-filter: blur(25px) saturate(160%); -webkit-backdrop-filter: blur(25px) saturate(160%);
+        padding: 24px; border-radius: 38px; border: 0.5px solid rgba(255,255,255,0.7); 
+        width: 82%; max-width: 300px; text-align: center; box-shadow: 0 10px 30px rgba(122, 0, 54, 0.1); 
+    }
+    h1 { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.5px; }
+    .tag { font-size: 11px; font-weight: 600; margin-bottom: 22px; opacity: 0.5; text-transform: uppercase; letter-spacing: 1.5px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .box { background: rgba(255, 255, 255, 0.25); padding: 14px 0; border-radius: 18px; box-shadow: inset 0 0 0 0.5px rgba(255,255,255,0.3); }
+    .box span { display: block; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+    .box p { margin: 0; font-size: 10px; font-weight: 600; opacity: 0.6; }
+    .ev { margin-top: 20px; background: rgba(122, 0, 54, 0.06); padding: 12px; border-radius: 16px; font-size: 12px; color: #7a0036; line-height: 1.4; }
+    .ev b { color: #d63384; font-weight: 700; }
+    .footer { margin-top: 18px; font-size: 10px; opacity: 0.4; font-weight: 500; }
+</style></head>
 <body>
-
     <div class="bg-hearts" id="h"></div>
-
     <div class="card">
-        <h1>Lily-Rose & Keryan</h1>
-        <div class="tag">Pour Toujours</div>
-        
+        <h1>Lily-Rose & Keryan</h1><div class="tag">Pour Toujours</div>
         <div class="grid">
             <div class="box"><span id="d">0</span><p>jours</p></div>
             <div class="box"><span id="hr">00</span><p>heures</p></div>
             <div class="box"><span id="m">00</span><p>minutes</p></div>
             <div class="box"><span id="s">00</span><p>secondes</p></div>
         </div>
-
         <div id="ec" class="ev">Synchronisation...</div>
-        
         <div class="footer">Depuis le 30 octobre 2024</div>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        // CONFIGURATION FIREBASE (Verrouillée)
         const firebaseConfig = {
             apiKey: "AIzaSyCKOyjFQB-Q1CJTN2sOBP37NiSpnDNllO0",
             authDomain: "compteur-a91b1.firebaseapp.com",
@@ -141,16 +63,11 @@
             messagingSenderId: "970871414423",
             appId: "1:970871414423:web:87d07f6ed151c164e513d2"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        
-        // SYNCHRO FIREBASE (Verrouillée)
         let serverOffset = 0;
         const offsetRef = ref(db, ".info/serverTimeOffset");
-        onValue(offsetRef, (snap) => {
-            serverOffset = snap.val() || 0;
-        });
+        onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
 
         const start = new Date("2024-10-30T14:30:00").getTime();
         const evs = [
@@ -163,21 +80,14 @@
         function render() {
             const now = Date.now() + serverOffset;
             const diff = now - start;
-
-            // Dégradé calme (now / 60)
-            const angle = (now / 60) % 360;
+            const angle = (now / 50) % 360;
             document.body.style.setProperty('--angle', angle + 'deg');
-            
-            const moveX = Math.sin(now/8000)*15;
-            const moveY = Math.cos(now/8000)*15;
-            document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
-
+            document.body.style.backgroundPosition = `${50 + Math.sin(now/5000)*30}% ${50 + Math.cos(now/5000)*30}%`;
             if (diff >= 0) {
                 document.getElementById('d').innerText = Math.floor(diff/864e5);
                 document.getElementById('hr').innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
                 document.getElementById('m').innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
                 document.getElementById('s').innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
-                
                 const nD = new Date(now);
                 const t = new Date(nD.getFullYear(), nD.getMonth(), nD.getDate());
                 let best = null, min = 366;
@@ -192,16 +102,7 @@
             requestAnimationFrame(render);
         }
 
-        // BLOQUAGE JAVASCRIPT DU SCROLL/BOUNCE
-        window.addEventListener('scroll', () => {
-            if (window.scrollY !== 0) window.scrollTo(0, 0);
-        }, { passive: false });
-
-        document.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-        }, { passive: false });
-
-        // Génération des cœurs
+        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
         for(let i=0; i<15; i++) {
             let heart = document.createElement('div'); heart.className='floating-heart';
             heart.innerText = ['💖', '🤍', '🌸', '✨'][Math.floor(Math.random()*4)];
@@ -209,8 +110,6 @@
             heart.style.animationDelay = (Math.random() * -15) + 's';
             document.getElementById('h').appendChild(heart);
         }
-
         requestAnimationFrame(render);
     </script>
-</body>
-</html>
+</body></html>
