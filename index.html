@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Lily-Rose & Keryan</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Lily-Rose & Keryan</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/160/heart-suit.png">
 <style>
     :root { --p: #4a001e; --g: rgba(255, 255, 255, 0.4); }
+    
+    /* BLOQUAGE DU SCROLL CSS */
+    html, body { 
+        margin: 0; 
+        padding: 0;
+        height: 100%; 
+        width: 100%;
+        overflow: hidden; /* Empêche le scroll classique */
+        position: fixed; /* Bloque la position sur iOS */
+        touch-action: none; /* Désactive les gestes de scroll tactiles */
+    }
+
     body { 
-        margin: 0; height: 100vh; 
         background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
         background-size: 400% 400%;
         display: flex; justify-content: center; align-items: center; 
         font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
-        color: var(--p); overflow: hidden; -webkit-user-select: none; 
+        color: var(--p); -webkit-user-select: none; user-select: none;
     }
+
     .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
     .floating-heart { position: absolute; opacity: 0; animation: float 15s linear infinite, fadeIn 3s ease-in forwards; font-size: 22px; }
     @keyframes float { 0% { transform: translateY(110vh) rotate(0deg); } 100% { transform: translateY(-20vh) rotate(360deg); } }
@@ -66,7 +80,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         
-        // --- SYNCHRO ATOMIQUE VIA FIREBASE ---
         let serverOffset = 0;
         const offsetRef = ref(db, ".info/serverTimeOffset");
         onValue(offsetRef, (snap) => {
@@ -82,11 +95,9 @@
         ];
 
         function render() {
-            // "now" est maintenant corrigé par le serveur Firebase en temps réel
             const now = Date.now() + serverOffset;
             const diff = now - start;
 
-            // Dégradé synchronisé au millième de seconde
             const angle = (now / 50) % 360;
             document.body.style.setProperty('--angle', angle + 'deg');
             document.body.style.backgroundPosition = `${50 + Math.sin(now/5000)*20}% ${50 + Math.cos(now/5000)*20}%`;
@@ -111,7 +122,11 @@
             requestAnimationFrame(render);
         }
 
-        // Cœurs flottants
+        // BLOQUAGE DU "BOUNCE" IOS EN JAVASCRIPT
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
         for(let i=0; i<12; i++) {
             let heart = document.createElement('div'); heart.className='floating-heart';
             heart.innerText = ['💖', '🤍', '🌸', '✨'][Math.floor(Math.random()*4)];
