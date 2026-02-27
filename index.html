@@ -15,18 +15,19 @@
             --fond-carte: rgba(255, 255, 255, 0.4); 
         }
 
-        /* CONFIGURATION ÉCRAN FIXE */
+        /* RESET DE BASE */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden; /* Bloque le scroll classique */
-            position: fixed; /* Force la page à rester en place sur iOS */
-            touch-action: none; /* Désactive les gestes de zoom/scroll par défaut */
+            /* On retire le position: fixed d'ici pour sauver les couleurs */
+            overflow: hidden; 
+            background: #ff9a9e; /* Couleur de secours */
         }
 
         body { 
+            /* Le dégradé est de retour ici */
             background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
             background-size: 400% 400%;
             display: flex; 
@@ -38,21 +39,27 @@
             user-select: none;
         }
 
-        /* ANIMATION DES COEURS */
-        .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
-        .floating-heart { 
-            position: absolute; 
-            opacity: 0; 
-            animation: float 15s linear infinite, fadeIn 3s ease-in forwards; 
-            font-size: 22px; 
+        /* BOUCLIER ANTI-SCROLL (Invisible mais bloque tout) */
+        #scroll-lock {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            pointer-events: none; /* Laisse passer les clics mais bloque le swipe via JS */
         }
+
+        /* COEURS ET CARTE */
+        .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
+        .floating-heart { position: absolute; opacity: 0; animation: float 15s linear infinite, fadeIn 3s ease-in forwards; font-size: 22px; }
+        
         @keyframes float { 
             0% { transform: translateY(110vh) rotate(0deg); } 
             100% { transform: translateY(-20vh) rotate(360deg); } 
         }
         @keyframes fadeIn { to { opacity: 0.25; } }
 
-        /* CARTE ET COMPTEUR */
         .card { 
             position: relative; 
             z-index: 10; 
@@ -72,28 +79,18 @@
         .tag { font-size: 11px; font-weight: 600; margin-bottom: 22px; opacity: 0.5; text-transform: uppercase; letter-spacing: 1.5px; }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .box { 
-            background: rgba(255, 255, 255, 0.25); 
-            padding: 14px 0; 
-            border-radius: 18px; 
-            box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.3); 
-        }
+        .box { background: rgba(255, 255, 255, 0.25); padding: 14px 0; border-radius: 18px; }
         .box span { display: block; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
         .box p { margin: 0; font-size: 10px; font-weight: 600; opacity: 0.6; }
 
-        .ev { 
-            margin-top: 20px; 
-            background: rgba(122, 0, 54, 0.06); 
-            padding: 12px; 
-            border-radius: 16px; 
-            font-size: 12px; 
-            color: #7a0036; 
-        }
+        .ev { margin-top: 20px; background: rgba(122, 0, 54, 0.06); padding: 12px; border-radius: 16px; font-size: 12px; color: #7a0036; }
         .ev b { color: #d63384; font-weight: 700; }
         .footer { margin-top: 18px; font-size: 10px; opacity: 0.4; font-weight: 500; }
     </style>
 </head>
 <body>
+
+    <div id="scroll-lock"></div>
 
     <div class="bg-hearts" id="h"></div>
 
@@ -109,7 +106,6 @@
         </div>
 
         <div id="ec" class="ev">Synchronisation...</div>
-        
         <div class="footer">Depuis le 30 octobre 2024</div>
     </div>
 
@@ -117,7 +113,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIGURATION FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyCKOyjFQB-Q1CJTN2sOBP37NiSpnDNllO0",
             authDomain: "compteur-a91b1.firebaseapp.com",
@@ -131,17 +126,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 1. BLOCAGE DU SCROLL (Sécurité JavaScript pour Web App iOS)
-        document.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // Annule le mouvement de glissement
+        // --- BLOCAGE DU SCROLL ULTIME ---
+        // On bloque le scroll sur TOUTE la page
+        window.addEventListener('touchmove', (e) => {
+            e.preventDefault();
         }, { passive: false });
 
-        // 2. SYNCHRONISATION SERVEUR
+        // --- LOGIQUE FIREBASE ---
         let serverOffset = 0;
         const offsetRef = ref(db, ".info/serverTimeOffset");
         onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
 
-        // 3. LOGIQUE DU COMPTEUR
         const startDate = new Date("2024-10-30T14:30:00").getTime();
         const events = [
             { name: "St Valentin 🌹", month: 1, day: 14 },
@@ -184,7 +179,6 @@
             requestAnimationFrame(update);
         }
 
-        // COEURS DÉCO
         const emojis = ['💖', '🤍', '🌸', '✨'];
         for(let i=0; i<12; i++) {
             let h = document.createElement('div'); h.className='floating-heart';
