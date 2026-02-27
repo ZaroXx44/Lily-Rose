@@ -15,32 +15,19 @@
             --fond-carte: rgba(255, 255, 255, 0.4); 
         }
 
-        /* 1. ON FORCE LE FOND À DÉBORDER POUR COUVRIR LES BLOCS */
         html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #ff9a9e; /* Couleur de secours */
-        }
-
-        /* 2. LE FOND ANIMÉ : On utilise "before" pour qu'il sorte de l'écran */
-        body::before {
-            content: "";
-            position: fixed;
-            /* On dépasse de 10% en haut et en bas pour saturer les barres iOS */
-            top: -10%; 
-            left: 0;
-            right: 0;
-            bottom: -10%;
-            z-index: -1;
-            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
-            background-size: 400% 400%;
-            pointer-events: none;
+            /* Supprimé la couleur fixe qui bloquait tout */
         }
 
         body { 
+            /* Le dégradé est appliqué directement ici pour qu'il bouge partout */
+            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
+            background-size: 400% 400%;
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -50,7 +37,7 @@
             user-select: none;
         }
 
-        /* BOUCLIER ANTI-SCROLL */
+        /* Anti-scroll */
         #scroll-lock {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -58,7 +45,6 @@
             pointer-events: none;
         }
 
-        /* COEURS ET CARTE */
         .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; }
         .floating-heart { 
             position: absolute; 
@@ -138,10 +124,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // BLOQUAGE DU SCROLL
+        // Bloque le scroll sans casser le rendu
         window.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
 
-        // LOGIQUE FIREBASE
         let serverOffset = 0;
         const offsetRef = ref(db, ".info/serverTimeOffset");
         onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
@@ -159,7 +144,6 @@
             const diff = now - startDate;
 
             const angle = (now / 50) % 360;
-            // On applique l'angle à l'élément before pour le fond
             document.body.style.setProperty('--angle', angle + 'deg');
 
             if (diff >= 0) {
