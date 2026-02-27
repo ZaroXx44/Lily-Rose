@@ -15,39 +15,34 @@
             --fond-carte: rgba(255, 255, 255, 0.4); 
         }
 
-        html, body {
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+        html {
+            background-color: #ff9a9e; /* Empêche le flash blanc au chargement */
+            overscroll-behavior: none; /* Bloque le rebond Safari qui montre du blanc */
         }
 
         body { 
-            /* Ton design de dégradé animé */
-            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
-            background-size: 400% 400%;
-            
-            /* Alignement du contenu */
+            margin: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
             display: flex; 
             justify-content: center; 
             align-items: center; 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             color: var(--couleur-texte); 
             
-            /* Protection du contenu via safe-area (ta demande) */
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
+            /* Dégradé Smooth */
+            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
+            background-size: 400% 400%;
             
-            /* Box-sizing pour éviter que le padding n'agrandisse le body */
+            /* Safe Area */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             box-sizing: border-box;
             
             -webkit-user-select: none;
             user-select: none;
         }
 
-        /* Anti-scroll */
         #scroll-lock {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -134,6 +129,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // Bloque le scroll Safari
         window.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
 
         let serverOffset = 0;
@@ -141,19 +137,23 @@
         onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
 
         const startDate = new Date("2024-10-30T14:30:00").getTime();
+        
+        // Dates exactes (Mois-1 car Janvier = 0)
         const events = [
-            { name: "St Valentin 🌹", month: 1, day: 14 },
-            { name: "Anniv Keryan 🎂", month: 3, day: 10 },
-            { name: "Anniv Lily-Rose 🎂", month: 5, day: 30 },
-            { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
+            { name: "St Valentin 🌹", month: 1, day: 14 },     // Fév
+            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    // Mai
+            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, // Juil
+            { name: "Notre Anniversaire ❤️", month: 9, day: 30 } // Oct
         ];
 
         function update() {
             const now = Date.now() + serverOffset;
             const diff = now - startDate;
 
-            const angle = (now / 50) % 360;
+            // Dégradé ultra smooth
+            const angle = (now / 100) % 360; 
             document.body.style.setProperty('--angle', angle + 'deg');
+            document.body.style.backgroundPosition = `${50 + Math.sin(now/10000)*10}% ${50 + Math.cos(now/10000)*10}%`;
 
             if (diff >= 0) {
                 document.getElementById('d').innerText = Math.floor(diff/864e5);
