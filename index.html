@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Lily-Rose & Keryan</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,30 +15,28 @@
             --fond-carte: rgba(255, 255, 255, 0.4); 
         }
 
-        html {
-            background-color: #ff9a9e; /* Empêche le flash blanc au chargement */
-            overscroll-behavior: none; /* Bloque le rebond Safari qui montre du blanc */
+        /* 1. OPTIMISATION CHARGEMENT : Couleur de fond immédiate */
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #ff9a9e; /* Couleur de base pour éviter le flash blanc */
         }
 
         body { 
-            margin: 0;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
+            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
+            background-size: 400% 400%;
             display: flex; 
             justify-content: center; 
             align-items: center; 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             color: var(--couleur-texte); 
-            
-            /* Dégradé Smooth */
-            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
-            background-size: 400% 400%;
-            
-            /* Safe Area */
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
             box-sizing: border-box;
-            
             -webkit-user-select: none;
             user-select: none;
         }
@@ -102,15 +100,28 @@
         <div class="tag">Pour Toujours</div>
         
         <div class="grid">
-            <div class="box"><span id="d">0</span><p>jours</p></div>
-            <div class="box"><span id="hr">00</span><p>heures</p></div>
-            <div class="box"><span id="m">00</span><p>minutes</p></div>
-            <div class="box"><span id="s">00</span><p>secondes</p></div>
+            <div class="box"><span id="d">-</span><p>jours</p></div>
+            <div class="box"><span id="hr">--</span><p>heures</p></div>
+            <div class="box"><span id="m">--</span><p>minutes</p></div>
+            <div class="box"><span id="s">--</span><p>secondes</p></div>
         </div>
 
-        <div id="ec" class="ev">Synchronisation...</div>
+        <div id="ec" class="ev">Chargement...</div>
         <div class="footer">Depuis le 30 octobre 2024</div>
     </div>
+
+    <script>
+        // On initialise les coeurs immédiatement avant même Firebase
+        const container = document.getElementById('h');
+        const emojis = ['💖', '🤍', '🌸', '✨'];
+        for(let i=0; i<12; i++) {
+            let h = document.createElement('div'); h.className='floating-heart';
+            h.innerText = emojis[Math.floor(Math.random()*4)];
+            h.style.left = Math.random()*100+'vw';
+            h.style.animationDelay = (Math.random() * -15) + 's';
+            container.appendChild(h);
+        }
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -129,7 +140,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Bloque le scroll Safari
         window.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
 
         let serverOffset = 0;
@@ -137,23 +147,20 @@
         onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
 
         const startDate = new Date("2024-10-30T14:30:00").getTime();
-        
-        // Dates exactes (Mois-1 car Janvier = 0)
         const events = [
-            { name: "St Valentin 🌹", month: 1, day: 14 },     // Fév
-            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    // Mai
-            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, // Juil
-            { name: "Notre Anniversaire ❤️", month: 9, day: 30 } // Oct
+            { name: "St Valentin 🌹", month: 1, day: 14 },
+            { name: "Anniv Keryan 🎂", month: 3, day: 10 },
+            { name: "Anniv Lily-Rose 🎂", month: 5, day: 30 },
+            { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
         ];
 
         function update() {
+            // Utilise l'heure locale si Firebase n'a pas encore répondu
             const now = Date.now() + serverOffset;
             const diff = now - startDate;
 
-            // Dégradé ultra smooth
-            const angle = (now / 100) % 360; 
+            const angle = (now / 50) % 360;
             document.body.style.setProperty('--angle', angle + 'deg');
-            document.body.style.backgroundPosition = `${50 + Math.sin(now/10000)*10}% ${50 + Math.cos(now/10000)*10}%`;
 
             if (diff >= 0) {
                 document.getElementById('d').innerText = Math.floor(diff/864e5);
@@ -179,15 +186,6 @@
                 }
             }
             requestAnimationFrame(update);
-        }
-
-        const emojis = ['💖', '🤍', '🌸', '✨'];
-        for(let i=0; i<12; i++) {
-            let h = document.createElement('div'); h.className='floating-heart';
-            h.innerText = emojis[Math.floor(Math.random()*4)];
-            h.style.left = Math.random()*100+'vw';
-            h.style.animationDelay = (Math.random() * -15) + 's';
-            document.getElementById('h').appendChild(h);
         }
 
         requestAnimationFrame(update);
