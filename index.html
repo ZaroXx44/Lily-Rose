@@ -15,28 +15,32 @@
             --fond-carte: rgba(255, 255, 255, 0.4); 
         }
 
-        /* 1. OPTIMISATION CHARGEMENT : Couleur de fond immédiate */
+        /* Suppression visuelle de la barre du bas en unifiant la couleur de fond */
+        html {
+            background-color: #ffb3b6; /* Couleur de départ plus claire */
+        }
+
         html, body {
             margin: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #ff9a9e; /* Couleur de base pour éviter le flash blanc */
         }
 
         body { 
-            background: linear-gradient(var(--angle, 0deg), #ff9a9e, #fad0c4, #ffd1ff, #feb47b);
+            /* Dégradé ajusté vers des tons plus clairs/pastels */
+            background: linear-gradient(var(--angle, 0deg), #ffb3b6, #ffdfd3, #ffe4ff, #ffdbbc);
             background-size: 400% 400%;
             display: flex; 
             justify-content: center; 
             align-items: center; 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             color: var(--couleur-texte); 
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
+            
+            /* Protection safe-area */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             box-sizing: border-box;
+            
             -webkit-user-select: none;
             user-select: none;
         }
@@ -111,7 +115,6 @@
     </div>
 
     <script>
-        // On initialise les coeurs immédiatement avant même Firebase
         const container = document.getElementById('h');
         const emojis = ['💖', '🤍', '🌸', '✨'];
         for(let i=0; i<12; i++) {
@@ -155,7 +158,6 @@
         ];
 
         function update() {
-            // Utilise l'heure locale si Firebase n'a pas encore répondu
             const now = Date.now() + serverOffset;
             const diff = now - startDate;
 
