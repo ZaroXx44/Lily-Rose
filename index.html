@@ -15,10 +15,9 @@
             --fond-carte: rgba(255, 255, 255, 0.4); 
         }
 
-        /* ON SUPPRIME LA COULEUR FIXE ICI POUR ENLEVER LA BARRE */
         html {
             height: 100%;
-            background: transparent;
+            background: #ffb3b6; 
         }
 
         body { 
@@ -26,7 +25,6 @@
             width: 100%;
             height: 100vh;
             overflow: hidden;
-            /* Dégradé éclairci et pastels */
             background: linear-gradient(var(--angle, 0deg), #ffb3b6, #ffdfd3, #ffe4ff, #ffdbbc);
             background-size: 400% 400%;
             display: flex; 
@@ -34,16 +32,12 @@
             align-items: center; 
             font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
             color: var(--couleur-texte); 
-            
-            /* On gère les marges proprement sans créer de blocs de couleur */
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             box-sizing: border-box;
-            
             -webkit-user-select: none;
             user-select: none;
         }
 
-        /* BOUCLIER ANTI-SCROLL */
         #scroll-lock {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -51,7 +45,6 @@
             pointer-events: none;
         }
 
-        /* ANIMATION COEURS */
         .bg-hearts { position: absolute; width: 100%; height: 100%; z-index: 0; top:0; left:0; }
         .floating-heart { 
             position: absolute; 
@@ -66,7 +59,6 @@
         }
         @keyframes fadeIn { to { opacity: 0.25; } }
 
-        /* LA CARTE */
         .card { 
             position: relative; 
             z-index: 10; 
@@ -144,7 +136,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Bloque le scroll
         window.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
 
         let serverOffset = 0;
@@ -152,10 +143,11 @@
         onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
 
         const startDate = new Date("2024-10-30T14:30:00").getTime();
+        
         const events = [
-            { name: "St Valentin 🌹", month: 1, day: 14 },
-            { name: "Anniv Keryan 🎂", month: 3, day: 10 },
-            { name: "Anniv Lily-Rose 🎂", month: 5, day: 30 },
+            { name: "St Valentin 🌹", month: 1, day: 14 },     
+            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    // MAI = 4 (car 0=Janvier)
+            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, // JUILLET = 6
             { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
         ];
 
