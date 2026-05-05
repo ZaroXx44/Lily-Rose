@@ -9,6 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/emoji/160/heart-suit.png">
 
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://compteur-a91b1-default-rtdb.europe-west1.firebasedatabase.app" crossorigin>
+
     <style>
         :root { 
             --couleur-texte: #4a001e; 
@@ -124,6 +127,63 @@
         }
 
         window.addEventListener('touchmove', (e) => { e.preventDefault(); }, { passive: false });
+
+        // Variable globale qui sera mise à jour par Firebase plus tard
+        window.serverOffset = 0; 
+
+        const startDate = new Date("2024-10-30T14:30:00").getTime();
+        
+        const events = [
+            { name: "St Valentin 🌹", month: 1, day: 14 },     
+            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    
+            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, 
+            { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
+        ];
+
+        // OPTIMISATION : Mise en cache du DOM pour ne pas surcharger le processeur
+        const elD = document.getElementById('d');
+        const elHr = document.getElementById('hr');
+        const elM = document.getElementById('m');
+        const elS = document.getElementById('s');
+        const elEc = document.getElementById('ec');
+        const bodyStyle = document.body.style;
+
+        function update() {
+            const now = Date.now() + window.serverOffset;
+            const diff = now - startDate;
+
+            const angle = (now / 50) % 360;
+            bodyStyle.setProperty('--angle', angle + 'deg');
+
+            if (diff >= 0) {
+                elD.innerText = Math.floor(diff/864e5);
+                elHr.innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
+                elM.innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
+                elS.innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
+                
+                const currentDate = new Date(now);
+                const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
+                
+                let next = null, min = 366;
+                events.forEach(e => {
+                    let d = new Date(currentDate.getFullYear(), e.month, e.day, 0, 0, 0);
+                    if (d < today) d.setFullYear(d.getFullYear() + 1);
+                    
+                    let diffDays = Math.round((d - today) / 864e5);
+                    if (diffDays < min) { min = diffDays; next = e; }
+                });
+
+                if(next) {
+                    elEc.innerHTML = min === 0 
+                        ? `<b>C'est aujourd'hui !</b><br>${next.name}` 
+                        : `<b>${next.name}</b> dans ${min} jour${min>1?'s':''}`;
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        // Lance le compteur instantanément
+        requestAnimationFrame(update);
     </script>
 
     <script type="module">
@@ -143,57 +203,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let serverOffset = 0;
         const offsetRef = ref(db, ".info/serverTimeOffset");
-        onValue(offsetRef, (snap) => { serverOffset = snap.val() || 0; });
-
-        // Heure de départ figée de manière absolue
-        const startDate = new Date("2024-10-30T14:30:00").getTime();
-        
-        const events = [
-            { name: "St Valentin 🌹", month: 1, day: 14 },     
-            { name: "Anniv Keryan 🎂", month: 4, day: 10 },    
-            { name: "Anniv Lily-Rose 🎂", month: 6, day: 30 }, 
-            { name: "Notre Anniversaire ❤️", month: 9, day: 30 }
-        ];
-
-        function update() {
-            const now = Date.now() + serverOffset;
-            const diff = now - startDate;
-
-            const angle = (now / 50) % 360;
-            document.body.style.setProperty('--angle', angle + 'deg');
-
-            if (diff >= 0) {
-                document.getElementById('d').innerText = Math.floor(diff/864e5);
-                document.getElementById('hr').innerText = Math.floor((diff%864e5)/36e5).toString().padStart(2,'0');
-                document.getElementById('m').innerText = Math.floor((diff%36e5)/6e4).toString().padStart(2,'0');
-                document.getElementById('s').innerText = Math.floor((diff%6e4)/1e3).toString().padStart(2,'0');
-                
-                const currentDate = new Date(now);
-                // On met à 00:00:00 pour éviter les problèmes de décalage horaire sur les événements
-                const today = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0);
-                
-                let next = null, min = 366;
-                events.forEach(e => {
-                    let d = new Date(currentDate.getFullYear(), e.month, e.day, 0, 0, 0);
-                    if (d < today) d.setFullYear(d.getFullYear() + 1);
-                    
-                    // Utilisation de Math.round pour éviter les bugs des jours de 23h/25h liés à l'heure d'été
-                    let diffDays = Math.round((d - today) / 864e5);
-                    if (diffDays < min) { min = diffDays; next = e; }
-                });
-
-                if(next) {
-                    document.getElementById("ec").innerHTML = min === 0 
-                        ? `<b>C'est aujourd'hui !</b><br>${next.name}` 
-                        : `<b>${next.name}</b> dans ${min} jour${min>1?'s':''}`;
-                }
-            }
-            requestAnimationFrame(update);
-        }
-
-        requestAnimationFrame(update);
+        onValue(offsetRef, (snap) => { 
+            // Met à jour la variable globale silencieusement
+            window.serverOffset = snap.val() || 0; 
+        });
     </script>
 </body>
 </html>
